@@ -10,7 +10,7 @@
 </head>
 <body>
 <header class="top">
-  <div class="brand"><span class="logo"></span><span class="h2">Omnitone Uploader</span></div>
+  <div class="brand"><span class="logo"></span><a class="h2 home-link" href="#/">Omnitone Uploader</a></div>
   <div class="conn">
     <span id="status" class="status"><span class="dot"></span><span id="status-text">Not connected</span></span>
     <button class="btn" id="btn-connect">Connect device</button>
@@ -22,21 +22,31 @@
   <p class="lbl lead">Add WAV files, fill all 12 notes, then send everything to your Omnitone.</p>
   <div class="grid">
     <div class="col">
-      <div id="drop" class="drop">
-        <div><div class="h2">Drop WAV files here</div>
-        <div class="lbl">WAV only. Tones up to 250 kB, backing tracks up to 8 MB.</div></div>
-        <button class="btn btn-p" id="btn-browse">Browse files</button>
-        <input type="file" id="file" accept=".wav,audio/wav" multiple hidden>
-      </div>
       <div id="notices" role="status" aria-live="polite"></div>
-      <div>
-        <div class="tabs"><button class="tab on" data-tab="tones">Tones</button><button class="tab" data-tab="tracks">Backing tracks</button></div>
+
+      <!-- View 1: start page -->
+      <section id="view-home">
+        <div class="choices">
+          <a class="choice" href="#/tones"><span class="h2">Upload a tone</span><span class="lbl">Fill all 12 notes with one pitch-shifted sample or 12 separate files.</span><strong id="home-tones" class="meta"></strong></a>
+          <a class="choice" href="#/tracks"><span class="h2">Upload a backing track</span><span class="lbl">Add a looping track and assign it to a slot.</span><strong id="home-tracks" class="meta"></strong></a>
+        </div>
+      </section>
+
+      <!-- Views 2 and 3: tone page and backing track page -->
+      <div id="view-work" class="col" hidden>
+        <div><a class="back" href="#/">Back to start</a><h2 class="h2" id="work-title"></h2></div>
+        <div id="drop" class="drop">
+          <div><div class="h2">Drop WAV files here</div><div class="lbl" id="drop-hint"></div></div>
+          <button class="btn btn-p" id="btn-browse">Browse files</button>
+          <input type="file" id="file" accept=".wav,audio/wav" multiple hidden>
+        </div>
         <section id="panel-tones" class="card"></section>
         <section id="panel-tracks" class="card" hidden></section>
       </div>
     </div>
+
     <aside class="col">
-      <div class="card">
+      <div class="card" id="send-card" hidden>
         <div class="h2">Send to Omnitone</div>
         <div id="checks"></div>
         <button class="btn btn-p wide" id="btn-send">Send to Omnitone</button>

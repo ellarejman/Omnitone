@@ -1,9 +1,61 @@
 <!doctype html>
-<html>
-  <head>
-    <title>This is the title of the webpage!</title>
-  </head>
-  <body>
-    <p>This is an example paragraph. Anything in the <strong>body</strong> tag will appear on the page, just like this <strong>p</strong> tag and its contents.</p>
-  </body>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Omnitone Uploader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="logo"></span><span class="h2">Omnitone Uploader</span></div>
+  <div class="conn">
+    <span id="status" class="status"><span class="dot"></span><span id="status-text">Not connected</span></span>
+    <button class="btn" id="btn-connect">Connect device</button>
+    <button class="btn" id="btn-disconnect" hidden>Disconnect</button>
+  </div>
+</header>
+<main>
+  <h1 class="h2 big">Your sound library</h1>
+  <p class="lbl lead">Add WAV files, fill all 12 notes, then send everything to your Omnitone.</p>
+  <div class="grid">
+    <div class="col">
+      <div id="drop" class="drop">
+        <div><div class="h2">Drop WAV files here</div>
+        <div class="lbl">WAV only. Tones up to 250 kB, backing tracks up to 8 MB.</div></div>
+        <button class="btn btn-p" id="btn-browse">Browse files</button>
+        <input type="file" id="file" accept=".wav,audio/wav" multiple hidden>
+      </div>
+      <div id="notices" role="status" aria-live="polite"></div>
+      <div>
+        <div class="tabs"><button class="tab on" data-tab="tones">Tones</button><button class="tab" data-tab="tracks">Backing tracks</button></div>
+        <section id="panel-tones" class="card"></section>
+        <section id="panel-tracks" class="card" hidden></section>
+      </div>
+    </div>
+    <aside class="col">
+      <div class="card">
+        <div class="h2">Send to Omnitone</div>
+        <div id="checks"></div>
+        <button class="btn btn-p wide" id="btn-send">Send to Omnitone</button>
+        <div id="progress" hidden>
+          <div class="lbl between"><span id="prog-label">Sending</span><span id="pct">0%</span></div>
+          <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="prog-bar"><i style="width:0"></i></div>
+        </div>
+        <p class="lbl">Keep this tab open and the USB cable plugged in until the transfer finishes.</p>
+      </div>
+      <div class="card">
+        <div class="h2">Library storage</div>
+        <div class="lbl between"><span>Saved in this browser</span><span id="store-txt"></span></div>
+        <div class="bar"><i id="store-bar" style="width:0"></i></div>
+        <p class="lbl">Clearing your browser’s site data erases the library.</p>
+      </div>
+      <p class="lbl">Works in desktop Chrome and Edge. Uses Web Serial, so no drivers or installs.</p>
+    </aside>
+  </div>
+</main>
+<script src="app.js"></script>
+</body>
 </html>

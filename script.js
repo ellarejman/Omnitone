@@ -144,28 +144,7 @@ function renderSend() {
   const used = libSize();
   $('#store-txt').textContent = `${kb(used)} of 50 MB`; $('#store-bar').style.width = Math.min(100, used / CFG.LIB_MAX * 100) + '%';
 }
-function renderHome() {
-  const ready = lib.tones.filter(t => toneUsed(t) && toneReady(t)).length;
-  $('#home-tones').textContent = `${ready} of ${CFG.NUM_TONES} tones ready`;
-  $('#home-tracks').textContent = `${lib.tracks.length} uploaded, ${lib.tracks.filter(t => t.slot !== null).length} assigned`;
-}
-function render() { renderHome(); renderTones(); renderTracks(); renderSend(); }
-
-/* ===== Router: one page, three views, chosen by the URL hash (#/, #/tones, #/tracks) ===== */
-function route() {
-  const page = location.hash.replace('#/', '');
-  const view = page === 'tones' || page === 'tracks' ? page : 'home';
-  ui.tab = view === 'tracks' ? 'tracks' : 'tones';   // addFiles() reads ui.tab
-  $('#view-home').hidden = view !== 'home';
-  $('#view-work').hidden = view === 'home';
-  $('#send-card').hidden = view === 'home';
-  $('#panel-tones').hidden = view !== 'tones';
-  $('#panel-tracks').hidden = view !== 'tracks';
-  $('#work-title').textContent = view === 'tracks' ? 'Upload a backing track' : 'Upload a tone';
-  $('#drop-hint').textContent = view === 'tracks' ? `WAV only, up to ${kb(CFG.TRACK_MAX)} per track.` : `WAV only, up to ${kb(CFG.TONE_MAX)} per file.`;
-  window.scrollTo(0, 0);
-}
-window.addEventListener('hashchange', route);
+function render() { renderTones(); renderTracks(); renderSend(); }
 
 /* ===== Packager: placeholder format, agree on the real one with firmware =====
    "OMNI" | version u8 | toneCount u8 | trackCount u8
@@ -234,8 +213,9 @@ async function send() {
 let player;
 const play = bytes => { player && player.pause(); player = new Audio(URL.createObjectURL(new Blob([bytes], {type: 'audio/wav'}))); player.play(); };
 document.addEventListener('click', e => {
-  const b = e.target.closest('[data-act]'); if (!b) return;
+  const b = e.target.closest('[data-act],[data-tab]'); if (!b) return;
   const t = lib.tones[ui.tone], i = +b.dataset.i;
+  if (b.dataset.tab) { ui.tab = b.dataset.tab; document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x === b)); $('#panel-tones').hidden = ui.tab !== 'tones'; $('#panel-tracks').hidden = ui.tab !== 'tracks'; return; }
   switch (b.dataset.act) {
     case 'note': ui.note = i; renderTones(); break;
     case 'preview': { const s = t.samples[t.mode === 'pitch' ? 0 : ui.note]; s && play(s.bytes); break; }
@@ -265,5 +245,5 @@ if ('serial' in navigator) navigator.serial.addEventListener('disconnect', () =>
   try { const saved = await DB.get('library'); if (saved) lib = saved; } catch {}
   if (!('serial' in navigator)) notify('warn', 'Connecting to the Omnitone needs desktop Chrome or Edge. You can still build your library here.');
   if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
-  render(); route();
+  render();
 })();
